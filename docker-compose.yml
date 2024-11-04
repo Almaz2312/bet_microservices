@@ -1,0 +1,29 @@
+version: "3.11"
+
+
+services:
+  bet_maker:
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - "entrypoint.sh"
+    volumes:
+      - ./bet_maker/:/app/
+    ports:
+      - 8001:8080
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - net

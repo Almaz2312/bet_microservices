@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "betting-ms"
+version = "0.1.0"
+description = ""
+authors = ["Almaz Durusaliev"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.4"
+psycopg2-binary = "^2.9.10"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
+pytest = "^8.3.3"
+python-dotenv = "^1.0.1"
+uvicorn = "^0.32.0"
+asyncpg = "^0.30.0"
+passlib = "^1.7.4"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
