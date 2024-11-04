@@ -2,12 +2,13 @@ import requests
 from bet_maker.api.login import oauth2_schema
 from bet_maker.core.config import settings
 from bet_maker.db.session import get_session
+from bet_maker.schemas.bet import CreateBetSchema
 from fastapi import HTTPException, Depends
 from requests.adapters import HTTPAdapter
 from sqlalchemy.ext.asyncio import AsyncSession
 from urllib3 import Retry
 
-from bet_maker.db.models import User
+from bet_maker.db.models import User, Bet
 
 
 class AutoClosingSession:
@@ -43,5 +44,8 @@ async def get_events():
     return response.json()
 
 
-async def make_bet(db: AsyncSession):
-    return None
+async def make_a_bet(db: AsyncSession, user: User, bet: CreateBetSchema):
+    bet = Bet(
+        event_id=bet.event_id
+    )
+    return user

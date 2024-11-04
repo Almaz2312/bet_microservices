@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from bet_maker.core.hashing import Hasher
 from bet_maker.db.models import User
-from bet_maker.schemas.users import UserCreate, Profile
+from bet_maker.schemas.users import UserCreate
 
 
 def create_new_user(user: UserCreate, db: AsyncSession):
@@ -21,6 +21,12 @@ def create_new_user(user: UserCreate, db: AsyncSession):
 async def get_users(db: AsyncSession):
     users = await db.execute(select(User))
     return users.fetchall()
+
+
+async def get_user(username: str, db: AsyncSession):
+    query = select(User).where(User.username == username)
+    user = await db.execute(query).scalars().first()
+    return user
 
 
 async def get_profile(current_user, db: AsyncSession):
