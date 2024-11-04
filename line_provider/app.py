@@ -36,7 +36,7 @@ async def create_event(event: Event):
         events[event.event_id] = event
         return {}
 
-    for p_name, p_value in event.dict(exclude_unset=True).items():
+    for p_name, p_value in event.model_dump(exclude_unset=True).items():
         setattr(events[event.event_id], p_name, p_value)
 
     return {}

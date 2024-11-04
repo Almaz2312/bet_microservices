@@ -1,29 +1,29 @@
-version: "3.11"
-
-
 services:
   bet_maker:
     tty: true
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: bet_maker.Dockerfile
     command:
-      - "entrypoint.sh"
+      - uvicorn bet_maker.app:app --host 0.0.0.0 --port 8001 --reload
+    env_file:
+      - .evn.example
     volumes:
-      - ./bet_maker/:/app/
+      - ./bet_maker/:/bet_maker/
     ports:
-      - 8001:8080
+      - "8001:8001"
     depends_on:
       - postgres
+
 
   postgres:
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    networks:
-      - net
+      - "5434:5432"
+    env_file:
+      - .evn.example
+
+volumes:
+  postgres_data:
