@@ -4,17 +4,24 @@ services:
     build:
       context: .
       dockerfile: bet_maker.Dockerfile
-    command:
-      - uvicorn bet_maker.app:app --host 0.0.0.0 --port 8001 --reload
+    command: sh -c "uvicorn bet_maker.app:app --host 0.0.0.0 --port 8000 --reload"
     env_file:
       - .evn.example
-    volumes:
-      - ./bet_maker/:/bet_maker/
     ports:
-      - "8001:8001"
+      - "8001:8000"
     depends_on:
       - postgres
 
+  line_provider:
+    tty: true
+    build:
+      context: .
+      dockerfile: line_provider.Dockerfile
+    command: sh -c "uvicorn line_provider.app:app --host 0.0.0.0 --port 8000 --reload"
+    env_file:
+      - .evn.example
+    ports:
+      - "8002:8000"
 
   postgres:
     image: postgres
@@ -24,6 +31,16 @@ services:
       - "5434:5432"
     env_file:
       - .evn.example
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./ngnix_config.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - bet_maker
+      - line_provider
 
 volumes:
   postgres_data:
