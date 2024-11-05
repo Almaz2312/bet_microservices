@@ -11,7 +11,8 @@ def include_router(app):
 
 
 async def create_tables():
-    await Base.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 
 def start_application():
@@ -22,8 +23,12 @@ def start_application():
                        allow_credentials=True, allow_methods=["*"],
                        allow_headers=["*"])
     include_router(app)
-    create_tables()
     return app
 
 
 app = start_application()
+
+
+@app.on_event("startup")
+async def on_startapp():
+    await create_tables()
