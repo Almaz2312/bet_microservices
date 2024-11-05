@@ -12,8 +12,8 @@ router = APIRouter()
 
 
 @router.post("/register/", response_model=Profile)
-def create_user(user: UserCreate, db: AsyncSession = Depends(get_session)):
-    user = create_new_user(user=user, db=db)
+async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session)):
+    user = await create_new_user(user=user, db=db)
     return user
 
 

@@ -1,7 +1,7 @@
 from typing import Any
 import enum
 
-from sqlalchemy import Integer, String, Column, ForeignKey, Boolean, Float, DateTime, Enum
+from sqlalchemy import Integer, String, Column, ForeignKey, Boolean, Float, DateTime, Enum, Numeric
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 from sqlalchemy.orm import relationship
 
@@ -29,11 +29,15 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
+    bets = relationship("Bet", back_populates="user")
 
 
 class Bet(Base):
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     event_id = Column(Integer, primary_key=True)
     coefficient = Column(Float, nullable=False)
     deadline = Column(DateTime, nullable=False)
     state = Column(Enum(State), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User", back_populates="bets")
+    bet_sum = Column(Numeric(10, 2), nullable=False)

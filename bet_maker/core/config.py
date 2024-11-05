@@ -19,6 +19,7 @@ class Settings:
     DATABASE_URL = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
     LINE_PROVIDER_URL = os.getenv('LINE_PROVIDER_URL')
 
+    SECRET_KEY = os.getenv("SECRET_KEY")
     ALGORITHM = 'HS256'
     ACCESS_TOKEN_EXPIRE_MINUTES = 30
     BASE_DIR: Path = Path(__file__).parent.parent

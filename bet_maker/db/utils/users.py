@@ -6,29 +6,38 @@ from bet_maker.db.models import User
 from bet_maker.schemas.users import UserCreate
 
 
-def create_new_user(user: UserCreate, db: AsyncSession):
-    user = User(
+async def create_new_user(user: UserCreate, db: AsyncSession):
+    new_user = User(
         username=user.username,
         email=user.email,
         hashed_password=Hasher.get_password_hash(user.password)
     )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+    return new_user
 
 
 async def get_users(db: AsyncSession):
-    users = await db.execute(select(User))
-    return users.fetchall()
+    result = await db.execute(select(User))
+    users = result.scalars().all()
+    return users
 
 
 async def get_user(username: str, db: AsyncSession):
     query = select(User).where(User.username == username)
-    user = await db.execute(query).scalars().first()
+    result = await db.execute(query)
+    user = result.scalars().first()
     return user
 
 
-async def get_profile(current_user, db: AsyncSession):
+async def get_profile(current_user: User, db: AsyncSession):
     profile = await db.get(User, current_user.id)
     return profile
+
+
+async def get_user_from_email(email: str, db: AsyncSession):
+    query = select(User).where(User.email == email)
+    result = await db.execute(query)
+    user = result.scalars().first()
+    return user

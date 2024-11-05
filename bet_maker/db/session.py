@@ -14,11 +14,5 @@ async def get_session() -> Generator:
     try:
         session = SessionLocal()
         yield session
-
-    except Exception:
-        await session.rollback()
-
     finally:
         await session.close()
-
-

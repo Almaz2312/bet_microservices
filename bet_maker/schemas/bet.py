@@ -11,6 +11,11 @@ class State(enum.Enum):
 
 class CreateBetSchema(BaseModel):
     event_id: int
+    bet_sum: float
+
+
+class EventSchema(BaseModel):
+    event_id: int
     coefficient: float
     deadline: datetime
     state: State
